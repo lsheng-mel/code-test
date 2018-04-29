@@ -110,7 +110,7 @@ bool ExpressionTokeniser::IsBracket(char c)
 
 bool ExpressionTokeniser::IsOperator(char c)
 {
-	if (c == '+' || c == '-' || c == '*' || c == '/')
+	if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^')
 	{
 		return true;
 	}
@@ -128,11 +128,8 @@ bool ExpressionTokeniser::IsUnaryOperator(char c)
 
 		auto& tokenPrevious = vecTokens.back();
 
-		// it is a unary operator if it is an operator or opening parenthesis in front of it 
-		if (tokenPrevious.type == ADD
-			|| tokenPrevious.type == SUBTRACT
-			|| tokenPrevious.type == MULTIPLY
-			|| tokenPrevious.type == DIVIDE
+		// it is a unary operator if there is an operator or opening parenthesis in front of it 
+		if (tokenPrevious.IsOperator()
 			|| tokenPrevious.type == LEFT_BRACKET)
 			return true;
 	}
@@ -235,6 +232,9 @@ bool ExpressionTokeniser::CollectOperator(char c)
 		break;
 	case '/':
 		token.type = DIVIDE;
+		break;
+	case '^':
+		token.type = POWER;
 		break;
 	default:
 		return false;

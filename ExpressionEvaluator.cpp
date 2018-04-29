@@ -1,4 +1,5 @@
 #include "ExpressionEvaluator.h"
+#include <math.h>
 
 using namespace std;
 
@@ -49,7 +50,7 @@ double ExpressionEvaluator::DoEvaluation(const vector<ExpressionToken>& stack)
 	while (itr != evaluationStack.end())
 	{
 		auto& item = *itr;
-		if (item.type == ADD || item.type == SUBTRACT || item.type == MULTIPLY || item.type == DIVIDE)
+		if (item.IsOperator())
 		{
 			// get the two operands in the in front of this operator
 			if ((itr - 1) != evaluationStack.end() && (itr - 2) != evaluationStack.end())
@@ -85,6 +86,16 @@ double ExpressionEvaluator::DoEvaluation(const vector<ExpressionToken>& stack)
 						else
 							return 0.0;
 					}
+						break;
+					case POWER:
+						if (operand1.value == 0.0)
+							val = 1.0;
+						else if (operand2.value == 0.0)
+							val = 0.0;
+						else
+						{
+							val = pow(operand2.value, operand1.value);
+						}
 						break;
 					default:
 						break;

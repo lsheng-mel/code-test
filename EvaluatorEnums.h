@@ -8,6 +8,7 @@ enum ExpressionTokenType
 	SUBTRACT,		// "-"
 	MULTIPLY,		// "*"
 	DIVIDE,			// "/"
+	POWER,			// "^"
 	LEFT_BRACKET,	// "("
 	RIGHT_BRACKET	// ")"
 };

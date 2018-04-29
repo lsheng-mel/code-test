@@ -28,6 +28,7 @@ void ExpressionTokensCompiler::Compile()
 		case SUBTRACT:
 		case MULTIPLY:
 		case DIVIDE:
+		case POWER:
 			// operators
 		{
 			// search for any existing operators that comes with higher precedence
@@ -61,7 +62,7 @@ void ExpressionTokensCompiler::Compile()
 						vecOperators.pop_back();
 
 						// an opening parenthesis isexpected from the operators stack
-						if (vecOperators.back().type == LEFT_BRACKET)
+						if (vecOperators.back().IsLeftParenthesis())
 						{
 							bFound = true;
 
@@ -72,6 +73,13 @@ void ExpressionTokensCompiler::Compile()
 						{
 							// something is wrong?
 						}
+					}
+					// just the opening parenthesis
+					else if (tokenTmp.IsLeftParenthesis())
+					{
+						bFound = true;
+
+						vecOperators.pop_back();
 					}
 				} while (vecOperators.size() > 0 && !bFound);
 			}

@@ -18,7 +18,7 @@ struct ExpressionToken
 	//! check if this is an operator
 	bool IsOperator()
 	{
-		return (type == ADD || type == SUBTRACT || type == MULTIPLY || type == DIVIDE);
+		return (type == ADD || type == SUBTRACT || type == MULTIPLY || type == DIVIDE || type == POWER);
 	}
 	
 	//! check if this is an operand
@@ -47,7 +47,7 @@ struct ExpressionToken
 		{
 		case ADD:
 		{
-			if (otherOperator.type == MULTIPLY || otherOperator.type == DIVIDE)
+			if (otherOperator.type == MULTIPLY || otherOperator.type == DIVIDE || otherOperator.type == POWER)
 				return false;
 
 			return true;
@@ -55,7 +55,7 @@ struct ExpressionToken
 			break;
 		case SUBTRACT:
 		{
-			if (otherOperator.type == MULTIPLY || otherOperator.type == DIVIDE)
+			if (otherOperator.type == MULTIPLY || otherOperator.type == DIVIDE || otherOperator.type == POWER)
 				return false;
 
 			return true;
@@ -63,6 +63,10 @@ struct ExpressionToken
 			break;
 		case MULTIPLY:
 		case DIVIDE:
+			if(otherOperator.type != POWER)
+				return true;
+			break;
+		case POWER:
 			return true;
 			break;
 		default:
