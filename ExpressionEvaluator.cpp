@@ -52,9 +52,10 @@ double ExpressionEvaluator::DoEvaluation(const vector<ExpressionToken>& stack)
 		auto& item = *itr;
 		if (item.IsOperator())
 		{
-			// get the two operands in the in front of this operator
-			if ((itr - 1) != evaluationStack.end() && (itr - 2) != evaluationStack.end())
+			// check to ensure there are two operands in front of this operator before moving on
+			if (evaluationStack.begin() + 1 != evaluationStack.end() && itr >= evaluationStack.begin() + 1)
 			{
+				// get the two operands in the in front of this operator
 				auto& operand1 = *(itr - 1);
 				auto& operand2 = *(itr - 2);
 
