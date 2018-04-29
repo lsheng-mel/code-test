@@ -1,0 +1,220 @@
+#include "ExpressionTokeniser.h"
+#include <math.h>
+
+using namespace std;
+
+ExpressionTokeniser::ExpressionTokeniser()
+{
+}
+
+bool ExpressionTokeniser::Tokenise(string expression)
+{
+	if (expression == "")
+		return false;
+
+	// start from scratch
+	ClearTokens();
+
+	// reset current operand
+	operand.clear();
+
+	// iterate each character within the string
+	for (auto i = 0; i < expression.length(); ++i)
+	{
+		char c = expression[i];
+
+		// continue on the current operand traverse if it is still related
+		// otherwise move on
+		if(!UpdateCurrentOperand(c))
+		{
+			// try to collect an operator
+			if (!CollectOperator(c))
+			{
+				// try to collect a bracket
+				if (!CollectBracket(c))
+					return false;
+			}
+		}
+		// last run and it is an operand, we need to collect it to finish the iteration
+		else if (i == expression.length() - 1)
+		{
+			CollectOperand();
+		}
+	}
+
+	return true;
+}
+
+int ExpressionTokeniser::toNumber(char c)
+{
+	int ret = c - '0';
+	return ret;
+}
+
+bool ExpressionTokeniser::IsNumber(char c)
+{
+	if (c >= '0' && c <= '9')
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool ExpressionTokeniser::IsDecimal(char c)
+{
+	if (c == '.')
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool ExpressionTokeniser::IsLeftBracket(char c)
+{
+	const char leftBracket('(');
+
+	if (c == leftBracket)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool ExpressionTokeniser::IsRightBracket(char c)
+{
+	const char rightBracket(')');
+
+	if (c == rightBracket)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool ExpressionTokeniser::IsBracket(char c)
+{
+	return (IsLeftBracket(c) || IsRightBracket(c));
+}
+
+bool ExpressionTokeniser::IsOperator(char c)
+{
+	if (c == '+' || c == '-' || c == '*' || c == '/')
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool ExpressionTokeniser::UpdateCurrentOperand(char c)
+{
+	if (IsNumber(c))
+	{
+		if (operand.decimals == 0)
+			operand.value = operand.value * 10 + toNumber(c);
+		else
+		{
+			operand.value += pow(0.1, operand.decimals) * toNumber(c);
+
+			// increase the decimal place
+			operand.decimals++;
+		}
+
+		operand.traversingNumber = true;
+	}
+	else if (IsDecimal(c))
+	{
+		operand.decimals++;
+
+		operand.traversingNumber = true;
+	}
+	else
+	{
+		// it's been an operand in the string so far
+		if (operand.traversingNumber)
+		{
+			// collect the operand
+			CollectOperand();
+
+			operand.traversingNumber = false;
+		}
+	}
+
+	return operand.traversingNumber;
+}
+
+void ExpressionTokeniser::CollectOperand()
+{
+	if (!operand.traversingNumber)
+		return;
+
+	// add a new token
+	ExpressionToken token;
+	token.value = operand.value;
+
+	AddToken(token);
+
+	// clear the operand info for the next operand
+	operand.clear();
+}
+
+bool ExpressionTokeniser::CollectOperator(char c)
+{
+	if (!IsOperator(c))
+		return false;
+
+	// add the new token
+	ExpressionToken token;
+	switch (c)
+	{
+	case '+':
+		token.type = ADD;
+		break;
+	case '-':
+		token.type = SUBTRACT;
+		break;
+	case '*':
+		token.type = MULTIPLY;
+		break;
+	case '/':
+		token.type = DIVIDE;
+		break;
+	default:
+		return false;
+		break;
+	}
+	token.str = string(1, c);
+
+	// add it to the list
+	AddToken(token);
+
+	return true;
+}
+
+bool ExpressionTokeniser::CollectBracket(char c)
+{
+	bool bLeftBracket(IsLeftBracket(c));
+	bool bRightBracket(IsRightBracket(c));
+
+	if (bLeftBracket || bRightBracket)
+	{
+		ExpressionToken token;
+		if (bLeftBracket)
+			token.type = LEFT_BRACKET;
+		else
+			token.type = RIGHT_BRACKET;
+
+		token.str = string(1, c);
+
+		// add it to the token line
+		AddToken(token);
+
+		return true;
+	}
+
+	return false;
+}
