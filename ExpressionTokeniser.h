@@ -38,7 +38,7 @@ public:
 	// operations
 
 	//! tokenise the given string
-	//! returns true if succeeded, otherwise returns false (i.e invalid character found)
+	//! returns false if unexpected characters found
 	bool Tokenise(std::string expression);
 
 	//! get the collected tokens

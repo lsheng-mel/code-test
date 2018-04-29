@@ -1,7 +1,7 @@
 #pragma once
+#include <vector>
 #include "ExpressionTokensCompilerBase.h"
 #include "ExpressionToken.h"
-#include <vector>
 
 class ExpressionTokensCompiler : public ExpressionTokensCompilerBase
 {

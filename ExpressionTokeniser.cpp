@@ -1,5 +1,5 @@
-#include "ExpressionTokeniser.h"
 #include <math.h>
+#include "ExpressionTokeniser.h"
 
 using namespace std;
 
@@ -35,7 +35,7 @@ bool ExpressionTokeniser::Tokenise(string expression)
 					return false;
 			}
 		}
-		// last run and it is an operand, we need to collect it to finish the iteration
+		// if it is an operand for the last run, then we need to collect it to finish the iteration
 		else if (i == expression.length() - 1)
 		{
 			CollectOperand();

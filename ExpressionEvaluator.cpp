@@ -5,6 +5,7 @@ using namespace std;
 ExpressionEvaluator::ExpressionEvaluator()
 {
 	expression = "";
+	SetValid(true);
 }
 
 void ExpressionEvaluator::SetExpression(string exp)
@@ -14,20 +15,36 @@ void ExpressionEvaluator::SetExpression(string exp)
 
 double ExpressionEvaluator::Evaluate()
 {
+	const double invalidResult(0.0);
+
 	// tokenise the expression string
-	tokeniser.Tokenise(expression);
+	if (tokeniser.Tokenise(expression))
+	{
+		// validate the tokens before moving forward
+		SetValid(validator.Validate(tokeniser.GetTokens()));
 
-	// compile the tokens
-	compiler.SetTokens(tokeniser.GetTokens());
-	compiler.Compile();
+		// proceed with the evaluation
+		if (bValid)
+		{
+			// compile the tokens
+			compiler.SetTokens(tokeniser.GetTokens());
+			compiler.Compile();
 
-	vector<ExpressionToken> evaluationStack(compiler.GetEvaluationStack());
+			return DoEvaluation(compiler.GetEvaluationStack());
+		}
+	}
+	else
+	{
+		SetValid(false);
+	}	
 
-	return DoEvaluation(evaluationStack);
+	return invalidResult;
 }
 
-double ExpressionEvaluator::DoEvaluation(vector<ExpressionToken>& evaluationStack)
+double ExpressionEvaluator::DoEvaluation(const vector<ExpressionToken>& stack)
 {
+	vector<ExpressionToken> evaluationStack(stack);
+
 	auto itr = evaluationStack.begin();
 	while (itr != evaluationStack.end())
 	{

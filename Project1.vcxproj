@@ -116,6 +116,7 @@
     <ClCompile Include="ExpressionEvaluator.cpp" />
     <ClCompile Include="ExpressionTokeniser.cpp" />
     <ClCompile Include="ExpressionTokensCompiler.cpp" />
+    <ClCompile Include="ExpressionTokensValidator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EvaluatorEnums.h" />
@@ -124,6 +125,7 @@
     <ClInclude Include="ExpressionToken.h" />
     <ClInclude Include="ExpressionTokensCompiler.h" />
     <ClInclude Include="ExpressionTokensCompilerBase.h" />
+    <ClInclude Include="ExpressionTokensValidator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

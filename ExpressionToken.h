@@ -1,6 +1,6 @@
 #pragma once
-#include "EvaluatorEnums.h"
 #include <string>
+#include "EvaluatorEnums.h"
 
 struct ExpressionToken
 {
@@ -19,6 +19,24 @@ struct ExpressionToken
 	bool IsOperator()
 	{
 		return (type == ADD || type == SUBTRACT || type == MULTIPLY || type == DIVIDE);
+	}
+	
+	//! check if this is an operand
+	bool IsOperand()
+	{
+		return (type == NUMBER);
+	}
+
+	//! check if this is a left parenthesis
+	bool IsLeftParenthesis()
+	{
+		return (type == LEFT_BRACKET);
+	}
+
+	//! check if this is a right parenthesis
+	bool IsRightParenthesis()
+	{
+		return (type == RIGHT_BRACKET);
 	}
 
 	//! precedence comparison

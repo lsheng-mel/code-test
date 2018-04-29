@@ -27,6 +27,9 @@
     <ClCompile Include="ExpressionTokensCompiler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ExpressionTokensValidator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExpressionEvaluator.h">
@@ -45,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ExpressionTokensCompilerBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExpressionTokensValidator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
