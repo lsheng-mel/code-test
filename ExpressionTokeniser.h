@@ -52,6 +52,7 @@ private:
 	bool IsRightBracket(char c);
 	bool IsBracket(char c);
 	bool IsOperator(char c);
+	bool IsUnaryOperator(char c);
 
 	//! update the current operand info based on the current character
 	//! --- 
@@ -61,6 +62,10 @@ private:
 
 	//! collect the current operand
 	void CollectOperand();
+
+	//! collect a unary operator (+/-)
+	//! returns true if it is aunary opereator
+	bool CollectUnaryOperator(char c);
 
 	//! collect an operator
 	//! returns true if it is an operator

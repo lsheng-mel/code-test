@@ -9,6 +9,8 @@ ExpressionTokensCompiler::ExpressionTokensCompiler()
 
 void ExpressionTokensCompiler::Compile()
 {
+	Clear();
+
 	// iterate through all tokens in their original order
 	for (auto i = 0; i < vecTokens.size(); ++i)
 	{

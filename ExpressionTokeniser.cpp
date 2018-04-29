@@ -22,17 +22,25 @@ bool ExpressionTokeniser::Tokenise(string expression)
 	for (auto i = 0; i < expression.length(); ++i)
 	{
 		char c = expression[i];
+	
+		// ignore spaces
+		if (c == ' ')
+			continue;
 
 		// continue on the current operand traverse if it is still related
 		// otherwise move on
 		if(!UpdateCurrentOperand(c))
 		{
-			// try to collect an operator
-			if (!CollectOperator(c))
+			// try to collect a unary operator
+			if (!CollectUnaryOperator(c))
 			{
-				// try to collect a bracket
-				if (!CollectBracket(c))
-					return false;
+				// try to collect an operator
+				if (!CollectOperator(c))
+				{
+					// try to collect a bracket
+					if (!CollectBracket(c))
+						return false;
+				}
 			}
 		}
 		// if it is an operand for the last run, then we need to collect it to finish the iteration
@@ -110,6 +118,28 @@ bool ExpressionTokeniser::IsOperator(char c)
 	return false;
 }
 
+bool ExpressionTokeniser::IsUnaryOperator(char c)
+{
+	if (c == '+' || c == '-')
+	{
+		// nothing is in the front
+		if (vecTokens.size() == 0)
+			return true;
+
+		auto& tokenPrevious = vecTokens.back();
+
+		// it is a unary operator if it is an operator or opening parenthesis in front of it 
+		if (tokenPrevious.type == ADD
+			|| tokenPrevious.type == SUBTRACT
+			|| tokenPrevious.type == MULTIPLY
+			|| tokenPrevious.type == DIVIDE
+			|| tokenPrevious.type == LEFT_BRACKET)
+			return true;
+	}
+
+	return false;
+}
+
 bool ExpressionTokeniser::UpdateCurrentOperand(char c)
 {
 	if (IsNumber(c))
@@ -160,6 +190,29 @@ void ExpressionTokeniser::CollectOperand()
 
 	// clear the operand info for the next operand
 	operand.clear();
+}
+
+bool ExpressionTokeniser::CollectUnaryOperator(char c)
+{
+	if (IsUnaryOperator(c))
+	{
+		// convert '+' to '1' and '*'
+		// otherwise convert '-' to '-1' and '*'
+		ExpressionToken token;
+		token.type = NUMBER;
+		token.value = (c == '+') ? 1.0 : -1.0;
+
+		AddToken(token);
+
+		token.type = MULTIPLY;
+		token.value = 0.0;
+
+		AddToken(token);
+
+		return true;
+	}
+
+	return false;
 }
 
 bool ExpressionTokeniser::CollectOperator(char c)

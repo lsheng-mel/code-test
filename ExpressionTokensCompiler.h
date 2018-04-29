@@ -31,6 +31,9 @@ private:
 	//! create the stack used for final evaluation
 	void MakeFinalEvaluationStack();
 
+	//! clear all data
+	void Clear() { vecOperands.clear(); vecOperators.clear(); }
+
 private:
 	//! given tokens
 	std::vector<ExpressionToken> vecTokens;

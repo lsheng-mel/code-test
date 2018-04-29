@@ -8,38 +8,16 @@ ExpressionTokensValidator::ExpressionTokensValidator()
 
 bool ExpressionTokensValidator::Validate(const std::vector<ExpressionToken>& vecTokens)
 {
-	if (!AreParenthesisClosed(vecTokens))
-		return false;
-
-	if (FindConsectutiveTokens(vecTokens))
-		return false;
-
-	return true;
-}
-
-bool ExpressionTokensValidator::AreParenthesisClosed(const std::vector<ExpressionToken>& vecTokens)
-{
 	int nOpeningParenthesis(0);
-
-	// check there are the same number of opening and closing parenthesis
-	for each (auto token in vecTokens)
-	{
-		if (token.IsLeftParenthesis())
-			nOpeningParenthesis++;
-		else if (token.IsRightParenthesis())
-			nOpeningParenthesis--;
-	}
-
-	return (nOpeningParenthesis == 0);
-}
-
-bool ExpressionTokensValidator::FindConsectutiveTokens(const std::vector<ExpressionToken>& vecTokens)
-{
 	int nConsecutiveOperators(0);
 	int nConsecutiveOperands(0);
 
-	for each (auto token in vecTokens)
+	// check there are the same number of opening and closing parenthesis
+	for(auto i=0; i< vecTokens.size(); ++i)
 	{
+		auto token = vecTokens[i];
+
+		////////////////////////////////////////////
 		// operator
 		if (token.IsOperator())
 			nConsecutiveOperators++;
@@ -54,9 +32,30 @@ bool ExpressionTokensValidator::FindConsectutiveTokens(const std::vector<Express
 		else
 			nConsecutiveOperands = 0;
 
+		// found consecutive operators/operands
 		if (nConsecutiveOperators > 1 || nConsecutiveOperands > 1)
-			return true;
+			return false;
+
+		/////////////////////////////////////////////
+		// operator that is followed by closing parenthesis
+		if (token.IsOperator())
+		{
+			// this is the last token
+			if (i == vecTokens.size() - 1)
+				return false;
+			
+			auto nextToken = vecTokens[i + 1];
+			if (nextToken.type == RIGHT_BRACKET)
+				return false;
+		}
+
+		/////////////////////////////////////////////
+		// parenthesis
+		if (token.IsLeftParenthesis())
+			nOpeningParenthesis++;
+		else if (token.IsRightParenthesis())
+			nOpeningParenthesis--;
 	}
 
-	return false;
+	return (nOpeningParenthesis == 0);
 }
